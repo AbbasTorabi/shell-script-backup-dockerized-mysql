@@ -10,9 +10,27 @@ This script connect to your mysql and get databases list, then exclude mysql def
 ### Config your mysql step by step:
 - Docker compose:
 ```
--s => Save the results to your local file.
--g => Save the results to your local file and also push to your GitHub repo.
--c => Receive the results in a CSV format instead of JSON
+version: '3'
+services:
+  mysql-dockerized:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mysql-dockerized-container
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql_seure_password
+    volumes:
+      - './app:/usr/app'
+```
+
+- Dockerfile:
+```
+FROM mysql:latest
+RUN touch config.cnf
+COPY ./config.cnf config.cnf
 ```
 - Using multiple flags is fine, but avoid using both `-s` & `-g` as this will duplicate your results.
 - There are some script variables used to control the time format, wait time between tests and the results filename. Find them here:
